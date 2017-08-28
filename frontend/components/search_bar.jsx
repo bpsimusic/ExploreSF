@@ -1,11 +1,17 @@
 import React from 'react';
+import List from './list';
+import Map from './map';
 
 class SearchBar extends React.Component {
   constructor(props){
     super(props);
-    this.state = {value: ''};
+    this.state = {value: 'restaurant'};
     this.handleInput = this.handleInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount(){
+    this.query(this.state.value);
   }
 
   handleInput(e){
@@ -15,38 +21,59 @@ class SearchBar extends React.Component {
 
   handleSubmit(e){
     e.preventDefault();
-    console.log("test")
-      let map;
-      let infowindow;
+    this.query(this.state.value);
+  }
 
-      function initMap() {
-        let pyrmont = {lat: -33.867, lng: 151.195};
+  query(entry){
+    let map;
+    let infowindow;
 
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 15
-        });
+    let location = {lat: 37.773972, lng: -122.431297};
 
-        infowindow = new google.maps.InfoWindow();
-        let service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-          location: pyrmont,
-          radius: 500,
-          type: ['store']
-        }, (results, status)=>{console.log(results, status)});
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: location,
+      zoom: 15
+    });
+    infowindow = new google.maps.InfoWindow();
+    let service = new google.maps.places.PlacesService(map);
+    service.textSearch({
+      location,
+      radius: '500',
+      query: entry
+    }, callback);
+
+    function callback(results, status){
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          createMarker(results[i]);
+        }
       }
-      initMap();
+    }
+
+    function createMarker(place){
+      var placeLoc = place.geometry.location;
+      var marker = new google.maps.Marker({
+        map,
+        position: place.geometry.location
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+      });
+    }
   }
 
   render(){
     return (
-      <div>
+      <div className={"searchBarContainer"}>
         <form onSubmit={this.handleSubmit} className={"searchBar"}>
           <input onChange={this.handleInput} value={this.state.value}/>
           <button>Submit</button>
         </form>
         <div className={"locationsContainer"} >
-          {this.props.children}
+          <List />
+          <Map />
         </div>
       </div>
     );

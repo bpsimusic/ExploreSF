@@ -19,17 +19,24 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
+.searchBarContainer {
+	height: 500px;
+}
+
 .locationsContainer {
 	display: flex;
 	justify-content: space-around;
 	margin-top: 100px;
+	margin-bottom: 200px;
+	height: 100%;
 }
 
 .list {
-	background-color: 'red';
+	background-color: red;
 }
-.map {
-	background-color: 'green';
+#map {
+	height: 100%;
+	width: 45%;
 }
 
 .searchBar {

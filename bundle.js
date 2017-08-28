@@ -9761,14 +9761,6 @@ var _react = __webpack_require__(20);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _list = __webpack_require__(84);
-
-var _list2 = _interopRequireDefault(_list);
-
-var _map = __webpack_require__(85);
-
-var _map2 = _interopRequireDefault(_map);
-
 var _search_bar = __webpack_require__(86);
 
 var _search_bar2 = _interopRequireDefault(_search_bar);
@@ -9779,12 +9771,7 @@ var App = function App() {
   return _react2.default.createElement(
     'div',
     null,
-    _react2.default.createElement(
-      _search_bar2.default,
-      null,
-      _react2.default.createElement(_list2.default, null),
-      _react2.default.createElement(_map2.default, null)
-    )
+    _react2.default.createElement(_search_bar2.default, null)
   );
 };
 
@@ -9907,11 +9894,7 @@ var Map = function (_React$Component) {
     key: "render",
     value: function render() {
 
-      return _react2.default.createElement(
-        "div",
-        { className: "map" },
-        "Sup"
-      );
+      return _react2.default.createElement("div", { id: "map" });
     }
   }]);
 
@@ -9937,6 +9920,14 @@ var _react = __webpack_require__(20);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _list = __webpack_require__(84);
+
+var _list2 = _interopRequireDefault(_list);
+
+var _map = __webpack_require__(85);
+
+var _map2 = _interopRequireDefault(_map);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -9953,13 +9944,18 @@ var SearchBar = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
-    _this.state = { value: '' };
+    _this.state = { value: 'restaurant' };
     _this.handleInput = _this.handleInput.bind(_this);
     _this.handleSubmit = _this.handleSubmit.bind(_this);
     return _this;
   }
 
   _createClass(SearchBar, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.query(this.state.value);
+    }
+  }, {
     key: 'handleInput',
     value: function handleInput(e) {
       e.preventDefault();
@@ -9969,36 +9965,55 @@ var SearchBar = function (_React$Component) {
     key: 'handleSubmit',
     value: function handleSubmit(e) {
       e.preventDefault();
-      console.log("test");
+      this.query(this.state.value);
+    }
+  }, {
+    key: 'query',
+    value: function query(entry) {
       var map = void 0;
       var infowindow = void 0;
 
-      function initMap() {
-        var pyrmont = { lat: -33.867, lng: 151.195 };
+      var location = { lat: 37.773972, lng: -122.431297 };
 
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: pyrmont,
-          zoom: 15
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: location,
+        zoom: 15
+      });
+      infowindow = new google.maps.InfoWindow();
+      var service = new google.maps.places.PlacesService(map);
+      service.textSearch({
+        location: location,
+        radius: '500',
+        query: entry
+      }, callback);
+
+      function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+        }
+      }
+
+      function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
         });
 
-        infowindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-          location: pyrmont,
-          radius: 500,
-          type: ['store']
-        }, function (results, status) {
-          console.log(results, status);
+        google.maps.event.addListener(marker, 'click', function () {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
         });
       }
-      initMap();
     }
   }, {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
         'div',
-        null,
+        { className: "searchBarContainer" },
         _react2.default.createElement(
           'form',
           { onSubmit: this.handleSubmit, className: "searchBar" },
@@ -10012,7 +10027,8 @@ var SearchBar = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: "locationsContainer" },
-          this.props.children
+          _react2.default.createElement(_list2.default, null),
+          _react2.default.createElement(_map2.default, null)
         )
       );
     }
