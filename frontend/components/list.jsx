@@ -45,7 +45,7 @@ class List extends React.Component {
   }
 
   editAddress(address){
-    const editedAddress = address.split(", San Francisco");
+    const editedAddress = address.split(", United States");
     return editedAddress[0];
   }
 
@@ -66,12 +66,14 @@ class List extends React.Component {
       <div className={"list"}>
         <ul>
           {this.props.places.map((place, id)=>{
+            let open = place.opening_hours ? place.opening_hours.open_now : "N/A";
             return (
               <li key={id}
                 onMouseEnter={this.addTarget(place)}
                 onMouseLeave={this.removeTarget(place)}>
                 <p className={"locationName"}>{place.name}</p>
                 <p>{this.editAddress(place.formatted_address)}</p>
+                <p>Open: {`${open}`}</p>
               </li>
             );
           })}

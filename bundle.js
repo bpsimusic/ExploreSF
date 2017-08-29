@@ -9859,7 +9859,7 @@ var List = function (_React$Component) {
   }, {
     key: 'editAddress',
     value: function editAddress(address) {
-      var editedAddress = address.split(", San Francisco");
+      var editedAddress = address.split(", United States");
       return editedAddress[0];
     }
   }, {
@@ -9885,6 +9885,7 @@ var List = function (_React$Component) {
           'ul',
           null,
           this.props.places.map(function (place, id) {
+            var open = place.opening_hours ? place.opening_hours.open_now : "N/A";
             return _react2.default.createElement(
               'li',
               { key: id,
@@ -9899,6 +9900,12 @@ var List = function (_React$Component) {
                 'p',
                 null,
                 _this2.editAddress(place.formatted_address)
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                'Open: ',
+                '' + open
               )
             );
           })
