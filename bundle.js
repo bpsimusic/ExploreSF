@@ -9820,7 +9820,6 @@ var List = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this, props));
 
-    _this.marker = null;
     _this.infowindow = null;
     return _this;
   }
@@ -9832,24 +9831,22 @@ var List = function (_React$Component) {
 
       return function (e) {
         e.preventDefault();
-        createMarker(place);
+        createLabel(place);
 
-        function createMarker(x) {
+        function createLabel(x) {
 
-          that.marker = new google.maps.Marker({
-            map: window.map,
-            position: x.geometry.location
-          });
+          var percent = x.rating / 5 * 100;
 
-          var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + x.name + '</h1>') + '</div>';
+          var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + x.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + x.rating) + '<p>' + ('<div class="star-ratings-css">\n  <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n  <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n</div>') + '</div>' + '</div>';
 
           if (!that.infowindow) {
             that.infowindow = new google.maps.InfoWindow({
               content: contentString,
-              position: that.marker.position,
+              position: x.geometry.location,
               disableAutoPan: true
             });
           }
+
           that.infowindow.open(window.map);
         }
       };
@@ -9861,8 +9858,6 @@ var List = function (_React$Component) {
       return function (e) {
 
         e.preventDefault();
-        that.marker.setMap(null);
-        that.marker = null;
         that.infowindow.close();
         that.infowindow = null;
       };
@@ -10052,9 +10047,17 @@ var SearchBar = function (_React$Component) {
           position: place.geometry.location
         });
 
-        google.maps.event.addListener(marker, 'click', function () {
-          infowindow.setContent(place.name);
-          infowindow.open(window.map, this);
+        var percent = place.rating / 5 * 100;
+
+        var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating + ' </p>') + ('<div class="star-ratings-css">\n    <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    </div>') + '</div>' + '</div>';
+
+        marker.addListener('mouseover', function () {
+          infowindow.setContent(contentString);
+          infowindow.open(window.map, marker);
+        });
+
+        marker.addListener('mouseout', function () {
+          infowindow.close();
         });
       }
     }

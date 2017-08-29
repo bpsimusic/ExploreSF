@@ -19,6 +19,47 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 
+
+.star-ratings-css {
+  unicode-bidi: bidi-override;
+  color: #c5c5c5;
+  font-size: 12px;
+  height: 15px;
+  width: 60px;
+  position: relative;
+  padding: 0;
+  text-shadow: 0px 1px 0 #a2a2a2;
+	margin-left: 5px;
+}
+
+.star-ratings-css-top {
+	color: #e7711b;
+	padding: 0;
+	position: absolute;
+	z-index: 1;
+	display: block;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+
+.star-ratings-css-top-bottom {
+	padding: 0;
+	display: block;
+	z-index: 0;
+}
+
+#bodyContent {
+	display: flex;
+}
+
+.rating {
+	position: relative;
+	top: 2px;
+}
+
+.gm-style-iw + div {display: none;}
+
 .searchBarContainer {
 	height: 500px;
 }

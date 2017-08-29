@@ -67,9 +67,27 @@ class SearchBar extends React.Component {
         position: place.geometry.location
       });
 
-      google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(place.name);
-        infowindow.open(window.map, this);
+      let percent = (place.rating / 5 * 100);
+
+      let contentString = '<div id="content">'+
+    `<h1 id="firstHeading" class="firstHeading">${place.name}</h1>`+
+    '<div id="bodyContent">'+
+    `<p class="rating"> ${place.rating} </p>`+
+    `<div class="star-ratings-css">
+    <div class="star-ratings-css-top" style="width: ${percent}%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+    <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+    </div>` +
+    '</div>'+
+    '</div>';
+
+  
+      marker.addListener('mouseover', function() {
+        infowindow.setContent(contentString);
+        infowindow.open(window.map, marker);
+      });
+
+      marker.addListener('mouseout', function() {
+          infowindow.close();
       });
     }
   }

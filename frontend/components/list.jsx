@@ -3,7 +3,6 @@ import React from 'react';
 class List extends React.Component {
   constructor(props){
     super(props);
-    this.marker = null;
     this.infowindow = null;
   }
 
@@ -12,29 +11,33 @@ class List extends React.Component {
 
     return (e)=>{
       e.preventDefault();
-      createMarker(place);
+      createLabel(place);
 
-      function createMarker(x){
+      function createLabel(x){
 
-        that.marker = new google.maps.Marker({
-          map: window.map,
-          position: x.geometry.location
-        });
+        let percent = (x.rating / 5 * 100);
 
-        const contentString = '<div id="content">'+
+        let contentString = '<div id="content">'+
       `<h1 id="firstHeading" class="firstHeading">${x.name}</h1>`+
-
+      '<div id="bodyContent">'+
+      `<p class="rating"> ${x.rating}`+ '<p>'+
+      `<div class="star-ratings-css">
+  <div class="star-ratings-css-top" style="width: ${percent}%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+  <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+</div>` +
+      '</div>'+
       '</div>';
 
 
        if(!that.infowindow){
          that.infowindow = new google.maps.InfoWindow({
              content: contentString,
-             position: that.marker.position,
-             disableAutoPan: true
+             position: x.geometry.location,
+             disableAutoPan: true,
          });
-
        }
+
+      
        that.infowindow.open(window.map);
 
       }
@@ -47,8 +50,6 @@ class List extends React.Component {
     return (e)=>{
 
       e.preventDefault();
-      that.marker.setMap(null);
-      that.marker=null;
       that.infowindow.close();
       that.infowindow = null;
 
