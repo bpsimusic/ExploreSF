@@ -9821,27 +9821,41 @@ var List = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this, props));
 
     _this.marker = null;
+    _this.infowindow = null;
     return _this;
   }
 
   _createClass(List, [{
-    key: "addTarget",
+    key: 'addTarget',
     value: function addTarget(place) {
       var that = this;
+
       return function (e) {
         e.preventDefault();
-        createMarker(place.geometry.location);
+        createMarker(place);
 
-        function createMarker(location) {
+        function createMarker(x) {
+
           that.marker = new google.maps.Marker({
             map: window.map,
-            position: location
+            position: x.geometry.location
           });
+
+          var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + x.name + '</h1>') + '</div>';
+
+          if (!that.infowindow) {
+            that.infowindow = new google.maps.InfoWindow({
+              content: contentString,
+              position: that.marker.position,
+              disableAutoPan: true
+            });
+          }
+          that.infowindow.open(window.map);
         }
       };
     }
   }, {
-    key: "removeTarget",
+    key: 'removeTarget',
     value: function removeTarget(place) {
       var that = this;
       return function (e) {
@@ -9849,22 +9863,24 @@ var List = function (_React$Component) {
         e.preventDefault();
         that.marker.setMap(null);
         that.marker = null;
+        that.infowindow.close();
+        that.infowindow = null;
       };
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       var _this2 = this;
 
       return _react2.default.createElement(
-        "div",
+        'div',
         { className: "list" },
         _react2.default.createElement(
-          "ul",
+          'ul',
           null,
           this.props.places.map(function (place, id) {
             return _react2.default.createElement(
-              "li",
+              'li',
               { key: id,
                 onMouseEnter: _this2.addTarget(place),
                 onMouseLeave: _this2.removeTarget(place) },

@@ -4,19 +4,39 @@ class List extends React.Component {
   constructor(props){
     super(props);
     this.marker = null;
+    this.infowindow = null;
   }
 
   addTarget(place){
     let that = this;
+
     return (e)=>{
       e.preventDefault();
-      createMarker(place.geometry.location);
+      createMarker(place);
 
-      function createMarker(location){
-          that.marker = new google.maps.Marker({
+      function createMarker(x){
+
+        that.marker = new google.maps.Marker({
           map: window.map,
-          position: location
+          position: x.geometry.location
         });
+
+        const contentString = '<div id="content">'+
+      `<h1 id="firstHeading" class="firstHeading">${x.name}</h1>`+
+
+      '</div>';
+
+
+       if(!that.infowindow){
+         that.infowindow = new google.maps.InfoWindow({
+             content: contentString,
+             position: that.marker.position,
+             disableAutoPan: true
+         });
+
+       }
+       that.infowindow.open(window.map);
+
       }
     };
   }
@@ -29,14 +49,11 @@ class List extends React.Component {
       e.preventDefault();
       that.marker.setMap(null);
       that.marker=null;
+      that.infowindow.close();
+      that.infowindow = null;
+
     };
   }
-
-
-
-
-
-
 
   render(){
     return (
