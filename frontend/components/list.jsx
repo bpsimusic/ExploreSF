@@ -37,11 +37,16 @@ class List extends React.Component {
          });
        }
 
-      
+
        that.infowindow.open(window.map);
 
       }
     };
+  }
+
+  editAddress(address){
+    const editedAddress = address.split(", San Francisco");
+    return editedAddress[0];
   }
 
 
@@ -64,7 +69,10 @@ class List extends React.Component {
             return (
               <li key={id}
                 onMouseEnter={this.addTarget(place)}
-                onMouseLeave={this.removeTarget(place)}>{place.name}</li>
+                onMouseLeave={this.removeTarget(place)}>
+                <p className={"locationName"}>{place.name}</p>
+                <p>{this.editAddress(place.formatted_address)}</p>
+              </li>
             );
           })}
         </ul>

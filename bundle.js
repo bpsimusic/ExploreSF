@@ -9852,6 +9852,12 @@ var List = function (_React$Component) {
       };
     }
   }, {
+    key: 'editAddress',
+    value: function editAddress(address) {
+      var editedAddress = address.split(", San Francisco");
+      return editedAddress[0];
+    }
+  }, {
     key: 'removeTarget',
     value: function removeTarget(place) {
       var that = this;
@@ -9879,7 +9885,16 @@ var List = function (_React$Component) {
               { key: id,
                 onMouseEnter: _this2.addTarget(place),
                 onMouseLeave: _this2.removeTarget(place) },
-              place.name
+              _react2.default.createElement(
+                'p',
+                { className: "locationName" },
+                place.name
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                _this2.editAddress(place.formatted_address)
+              )
             );
           })
         )
@@ -10069,12 +10084,14 @@ var SearchBar = function (_React$Component) {
         { className: "searchBarContainer" },
         _react2.default.createElement(
           'form',
-          { onSubmit: this.handleSubmit, className: "searchBar" },
-          _react2.default.createElement('input', { onChange: this.handleInput, value: this.state.value }),
+          { onSubmit: this.handleSubmit, className: "searchBarForm" },
+          _react2.default.createElement('input', { onChange: this.handleInput,
+            value: this.state.value,
+            className: "searchBar" }),
           _react2.default.createElement(
             'button',
             null,
-            'Submit'
+            'Search'
           )
         ),
         _react2.default.createElement(

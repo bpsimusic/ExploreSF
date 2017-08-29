@@ -80,7 +80,7 @@ class SearchBar extends React.Component {
     '</div>'+
     '</div>';
 
-  
+
       marker.addListener('mouseover', function() {
         infowindow.setContent(contentString);
         infowindow.open(window.map, marker);
@@ -95,9 +95,11 @@ class SearchBar extends React.Component {
   render(){
     return (
       <div className={"searchBarContainer"}>
-        <form onSubmit={this.handleSubmit} className={"searchBar"}>
-          <input onChange={this.handleInput} value={this.state.value}/>
-          <button>Submit</button>
+        <form onSubmit={this.handleSubmit} className={"searchBarForm"}>
+          <input onChange={this.handleInput}
+            value={this.state.value}
+            className={"searchBar"}/>
+          <button>Search</button>
         </form>
         <div className={"locationsContainer"} >
           <List places={this.state.places}/>
