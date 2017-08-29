@@ -9770,7 +9770,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var App = function App() {
   return _react2.default.createElement(
     'div',
-    null,
+    { className: "topLevel" },
+    _react2.default.createElement(
+      'h1',
+      null,
+      'Explore SF'
+    ),
     _react2.default.createElement(_search_bar2.default, null)
   );
 };

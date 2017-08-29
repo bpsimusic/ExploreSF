@@ -5,7 +5,8 @@ import SearchBar from './search_bar';
 
 const App = ()=>{
   return (
-    <div>
+    <div className={"topLevel"}>
+      <h1>Explore SF</h1>
       <SearchBar />
     </div>
   );
