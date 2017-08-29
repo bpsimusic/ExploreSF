@@ -5,7 +5,7 @@ import Map from './map';
 class SearchBar extends React.Component {
   constructor(props){
     super(props);
-    this.state = {value: 'restaurant'};
+    this.state = {value: 'restaurant', places: []};
     this.handleInput = this.handleInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -25,41 +25,51 @@ class SearchBar extends React.Component {
   }
 
   query(entry){
-    let map;
     let infowindow;
-
     let location = {lat: 37.773972, lng: -122.431297};
 
-    map = new google.maps.Map(document.getElementById('map'), {
+    window.map = new google.maps.Map(document.getElementById('map'), {
       center: location,
-      zoom: 15
+      zoom: 13
     });
+
     infowindow = new google.maps.InfoWindow();
     let service = new google.maps.places.PlacesService(map);
     service.textSearch({
       location,
       radius: '500',
       query: entry
-    }, callback);
+    }, callback.bind(this));
 
     function callback(results, status){
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-          createMarker(results[i]);
-        }
+        this.setState({places: results.slice(0,10)}, ()=>{
+          for (var i = 0; i < 10; i++) {
+            createMarker(results[i]);
+          }
+        });
+
       }
     }
 
     function createMarker(place){
-      var placeLoc = place.geometry.location;
+      var symbolOne = {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10,
+        strokeColor: '#F00',
+        strokeWeight: 5,
+        fillColor: 'white',
+        fillOpacity: 1
+      };
       var marker = new google.maps.Marker({
-        map,
+        icon: symbolOne,
+        map: window.map,
         position: place.geometry.location
       });
 
       google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent(place.name);
-        infowindow.open(map, this);
+        infowindow.open(window.map, this);
       });
     }
   }
@@ -72,7 +82,7 @@ class SearchBar extends React.Component {
           <button>Submit</button>
         </form>
         <div className={"locationsContainer"} >
-          <List />
+          <List places={this.state.places}/>
           <Map />
         </div>
       </div>

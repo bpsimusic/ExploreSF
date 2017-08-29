@@ -9818,12 +9818,43 @@ var List = function (_React$Component) {
   function List(props) {
     _classCallCheck(this, List);
 
-    return _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).call(this, props));
+
+    _this.marker = null;
+    return _this;
   }
 
   _createClass(List, [{
+    key: "addTarget",
+    value: function addTarget(place) {
+      var that = this;
+      return function (e) {
+        e.preventDefault();
+        createMarker(place.geometry.location);
+
+        function createMarker(location) {
+          that.marker = new google.maps.Marker({
+            map: window.map,
+            position: location
+          });
+        }
+      };
+    }
+  }, {
+    key: "removeTarget",
+    value: function removeTarget(place) {
+      var that = this;
+      return function (e) {
+
+        e.preventDefault();
+        that.marker.setMap(null);
+        that.marker = null;
+      };
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
 
       return _react2.default.createElement(
         "div",
@@ -9831,21 +9862,15 @@ var List = function (_React$Component) {
         _react2.default.createElement(
           "ul",
           null,
-          _react2.default.createElement(
-            "li",
-            null,
-            "Barry's"
-          ),
-          _react2.default.createElement(
-            "li",
-            null,
-            "Barry's"
-          ),
-          _react2.default.createElement(
-            "li",
-            null,
-            "Barry's"
-          )
+          this.props.places.map(function (place, id) {
+            return _react2.default.createElement(
+              "li",
+              { key: id,
+                onMouseEnter: _this2.addTarget(place),
+                onMouseLeave: _this2.removeTarget(place) },
+              place.name
+            );
+          })
         )
       );
     }
@@ -9944,7 +9969,7 @@ var SearchBar = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
-    _this.state = { value: 'restaurant' };
+    _this.state = { value: 'restaurant', places: [] };
     _this.handleInput = _this.handleInput.bind(_this);
     _this.handleSubmit = _this.handleSubmit.bind(_this);
     return _this;
@@ -9970,41 +9995,50 @@ var SearchBar = function (_React$Component) {
   }, {
     key: 'query',
     value: function query(entry) {
-      var map = void 0;
       var infowindow = void 0;
-
       var location = { lat: 37.773972, lng: -122.431297 };
 
-      map = new google.maps.Map(document.getElementById('map'), {
+      window.map = new google.maps.Map(document.getElementById('map'), {
         center: location,
-        zoom: 15
+        zoom: 13
       });
+
       infowindow = new google.maps.InfoWindow();
       var service = new google.maps.places.PlacesService(map);
       service.textSearch({
         location: location,
         radius: '500',
         query: entry
-      }, callback);
+      }, callback.bind(this));
 
       function callback(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-          }
+          this.setState({ places: results.slice(0, 10) }, function () {
+            for (var i = 0; i < 10; i++) {
+              createMarker(results[i]);
+            }
+          });
         }
       }
 
       function createMarker(place) {
-        var placeLoc = place.geometry.location;
+        var symbolOne = {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          strokeColor: '#F00',
+          strokeWeight: 5,
+          fillColor: 'white',
+          fillOpacity: 1
+        };
         var marker = new google.maps.Marker({
-          map: map,
+          icon: symbolOne,
+          map: window.map,
           position: place.geometry.location
         });
 
         google.maps.event.addListener(marker, 'click', function () {
           infowindow.setContent(place.name);
-          infowindow.open(map, this);
+          infowindow.open(window.map, this);
         });
       }
     }
@@ -10027,7 +10061,7 @@ var SearchBar = function (_React$Component) {
         _react2.default.createElement(
           'div',
           { className: "locationsContainer" },
-          _react2.default.createElement(_list2.default, null),
+          _react2.default.createElement(_list2.default, { places: this.state.places }),
           _react2.default.createElement(_map2.default, null)
         )
       );
