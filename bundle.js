@@ -10756,7 +10756,7 @@ var SearchBar = function (_React$Component) {
       });
 
       infowindow = new google.maps.InfoWindow();
-      var service = new google.maps.places.PlacesService(map);
+      var service = new google.maps.places.PlacesService(window.map);
       service.textSearch({
         location: location,
         radius: '500',

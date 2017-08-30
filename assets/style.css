@@ -127,7 +127,7 @@ ul::-webkit-scrollbar-thumb {
 }
 
 ul li {
-	height: 50px;
+	min-height: 50px;
 padding: 20px;
 border-bottom: 1px solid black;
 }

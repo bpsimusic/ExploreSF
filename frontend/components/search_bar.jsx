@@ -34,7 +34,7 @@ class SearchBar extends React.Component {
     });
 
     infowindow = new google.maps.InfoWindow();
-    let service = new google.maps.places.PlacesService(map);
+    let service = new google.maps.places.PlacesService(window.map);
     service.textSearch({
       location,
       radius: '500',
