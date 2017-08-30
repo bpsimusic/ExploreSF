@@ -33,7 +33,7 @@ class SearchBar extends React.Component {
       zoom: 13
     });
 
-    infowindow = new google.maps.InfoWindow();
+    infowindow = new google.maps.InfoWindow({disableAutoPan: true});
     let service = new google.maps.places.PlacesService(window.map);
     service.textSearch({
       location,

@@ -9,7 +9,6 @@ class List extends React.Component {
 
   addTarget(place){
     let that = this;
-
     return (e)=>{
       e.preventDefault();
       createLabel(place);

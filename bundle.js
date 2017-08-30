@@ -10512,7 +10512,6 @@ var List = function (_React$Component) {
     key: 'addTarget',
     value: function addTarget(place) {
       var that = this;
-
       return function (e) {
         e.preventDefault();
         createLabel(place);
@@ -10755,7 +10754,7 @@ var SearchBar = function (_React$Component) {
         zoom: 13
       });
 
-      infowindow = new google.maps.InfoWindow();
+      infowindow = new google.maps.InfoWindow({ disableAutoPan: true });
       var service = new google.maps.places.PlacesService(window.map);
       service.textSearch({
         location: location,
