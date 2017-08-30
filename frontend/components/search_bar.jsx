@@ -5,7 +5,7 @@ import Map from './map';
 class SearchBar extends React.Component {
   constructor(props){
     super(props);
-    this.state = {value: 'restaurant', places: []};
+    this.state = {value: 'restaurant', places: [], loading: true};
     this.handleInput = this.handleInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -21,7 +21,7 @@ class SearchBar extends React.Component {
 
   handleSubmit(e){
     e.preventDefault();
-    this.query(this.state.value);
+    this.setState({loading: true}, ()=>{this.query(this.state.value);});
   }
 
   query(entry){
@@ -43,24 +43,42 @@ class SearchBar extends React.Component {
 
     function callback(results, status){
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        this.setState({places: results.slice(0,10)}, ()=>{
-          for (var i = 0; i < 10; i++) {
-            createMarker(results[i]);
+        let length = 10;
+        if (results.length < length){
+          length = results.length;
+        }
+        this.setState({places: results.slice(0,10), loading: false}, ()=>{
+          let markers = [];
+          for (var i = 0; i < length; i++) {
+            markers.push(createMarker(results[i]));
           }
+
+          let bounds = new google.maps.LatLngBounds();
+          for (let j = 0; j < markers.length; j++) {
+           bounds.extend(markers[j].getPosition());
+          }
+
+          window.map.fitBounds(bounds);
         });
 
+      } else {
+        this.setState({places: []});
       }
     }
 
     function createMarker(place){
+      if(!place){
+        return;
+      }
       var symbolOne = {
         path: google.maps.SymbolPath.CIRCLE,
         scale: 10,
-        strokeColor: '#F00',
-        strokeWeight: 5,
+        strokeColor: '#e60000',
+        strokeWeight: 7,
         fillColor: 'white',
         fillOpacity: 1
       };
+
       var marker = new google.maps.Marker({
         icon: symbolOne,
         map: window.map,
@@ -89,6 +107,7 @@ class SearchBar extends React.Component {
       marker.addListener('mouseout', function() {
           infowindow.close();
       });
+      return marker;
     }
   }
 
@@ -102,7 +121,7 @@ class SearchBar extends React.Component {
           <button>Search</button>
         </form>
         <div className={"locationsContainer"} >
-          <List places={this.state.places}/>
+          <List places={this.state.places} loading={this.state.loading}/>
           <Map />
         </div>
       </div>
