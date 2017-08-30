@@ -1,6 +1,5 @@
 import React from 'react';
 import List from './list';
-import Map from './map';
 
 class SearchBar extends React.Component {
   constructor(props){
@@ -105,7 +104,6 @@ class SearchBar extends React.Component {
       center: location,
       zoom: 13
     });
-
     let service = new google.maps.places.PlacesService(window.map);
     service.textSearch({
       location,
@@ -125,7 +123,9 @@ class SearchBar extends React.Component {
         </form>
         <div className={"locationsContainer"} >
           <List places={this.state.places} loading={this.state.loading}/>
-          <Map />
+          <div id={"map"} />
+
+
         </div>
       </div>
     );
