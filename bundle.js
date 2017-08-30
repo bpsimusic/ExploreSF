@@ -10557,11 +10557,7 @@ var List = function (_React$Component) {
           null,
           this.props.places.map(function (place, id) {
             var open = void 0;
-            if (place.opening_hours) {
-              open = place.opening_hours.open_now;
-            } else {
-              open = null;
-            }
+            open = place.opening_hours ? place.opening_hours.open_now : null;
             if (open !== null) {
               open = open ? "Open Now" : "Closed";
             }

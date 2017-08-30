@@ -56,11 +56,7 @@ class List extends React.Component {
         <ul>
           {this.props.places.map((place, id)=>{
             let open;
-            if (place.opening_hours){
-              open = place.opening_hours.open_now
-            } else {
-              open = null;
-            }
+            open = place.opening_hours ? place.opening_hours.open_now : null;
             if (open !== null) {
               open = open ? "Open Now" : "Closed";
             }

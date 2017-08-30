@@ -57,7 +57,9 @@ time, mark, audio, video {
 	top: 2px;
 }
 
-.gm-style-iw + div {display: none;}
+.gm-style-iw + div {
+	display: none;
+}
 
 .searchBarContainer {
 	height: 500px;
@@ -90,10 +92,8 @@ time, mark, audio, video {
 }
 
 .list {
-
-    width: 40%;
-    border: 1px solid black;
-
+  width: 40%;
+  border: 1px solid black;
 }
 #map {
 	height: 100%;
@@ -106,10 +106,10 @@ time, mark, audio, video {
 }
 
 ul {
-	    list-style-type: none;
-	    height:  100%;
-	    overflow-y: scroll;
-	    font-family: sans-serif;
+  list-style-type: none;
+  height:  100%;
+  overflow-y: scroll;
+  font-family: sans-serif;
 }
 
 ul::-webkit-scrollbar {
@@ -127,13 +127,30 @@ ul::-webkit-scrollbar-thumb {
 }
 
 ul li {
-	min-height: 50px;
-padding: 20px;
-border-bottom: 1px solid black;
+	min-height: 36px;
+	padding: 20px;
+	border-bottom: 1px solid black;
 }
 
 ul li:last-child {
 	border-bottom: 0px;
+}
+
+/* one item */
+li:first-child:nth-last-child(1) {
+    border-bottom: 1px solid black;
+}
+
+/* two items */
+li:first-child:nth-last-child(2),
+li:first-child:nth-last-child(2) ~ li {
+	border-bottom: 1px solid black;
+}
+
+/* three items */
+li:first-child:nth-last-child(3),
+li:first-child:nth-last-child(3) ~ li {
+	border-bottom: 1px solid black;
 }
 
 li:hover{
@@ -141,29 +158,28 @@ li:hover{
 }
 
 .searchBar {
-		font-size: 30px;
-    padding: 10px;
-    padding-left: 50px;
-    border: 1px solid black;
-    width: 400px;
-    background-image: url('images/searchicon.png');
-    background-size: 40px;
-    background-position: 6px 8px;
-    background-repeat: no-repeat;
-    border-radius: 4px;
+	font-size: 30px;
+  padding: 10px;
+  padding-left: 50px;
+  border: 1px solid black;
+  width: 400px;
+  background-image: url('images/searchicon.png');
+  background-size: 40px;
+  background-position: 6px 8px;
+  background-repeat: no-repeat;
+  border-radius: 4px;
 	}
 
 
 button {
 	margin-left: 10px;
-font-size: 22px;
-border-radius: 30px;
-border: 1px solid black;
-padding: 10px;
-padding-left: 20px;
-padding-right: 20px;
-background-color: white;
-
+	font-size: 22px;
+	border-radius: 30px;
+	border: 1px solid black;
+	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background-color: white;
 }
 
 button:focus {
