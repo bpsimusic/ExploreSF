@@ -10545,7 +10545,7 @@ var List = function (_React$Component) {
       if (this.props.places.length === 0 && !this.props.loading) {
         return _react2.default.createElement(
           'div',
-          null,
+          { className: "noResults" },
           'No results found'
         );
       } else {
@@ -10783,7 +10783,7 @@ var SearchBar = function (_React$Component) {
             window.map.fitBounds(bounds);
           });
         } else {
-          this.setState({ places: [] });
+          this.setState({ places: [], loading: false });
         }
       }
 
@@ -10805,10 +10805,13 @@ var SearchBar = function (_React$Component) {
           map: window.map,
           position: place.geometry.location
         });
-
-        var percent = place.rating / 5 * 100;
-
-        var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating + ' </p>') + ('<div class="star-ratings-css">\n    <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    </div>') + '</div>' + '</div>';
+        var contentString = void 0;
+        if (!place.rating) {
+          contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + '</div>' + '</div>';
+        } else {
+          var percent = place.rating / 5 * 100;
+          contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating + ' </p>') + ('<div class="star-ratings-css">\n        <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n        <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n        </div>') + '</div>' + '</div>';
+        }
 
         marker.addListener('mouseover', function () {
           infowindow.setContent(contentString);

@@ -62,7 +62,7 @@ class SearchBar extends React.Component {
         });
 
       } else {
-        this.setState({places: []});
+        this.setState({places: [], loading: false});
       }
     }
 
@@ -84,19 +84,26 @@ class SearchBar extends React.Component {
         map: window.map,
         position: place.geometry.location
       });
-
-      let percent = (place.rating / 5 * 100);
-
-      let contentString = '<div id="content">'+
-    `<h1 id="firstHeading" class="firstHeading">${place.name}</h1>`+
-    '<div id="bodyContent">'+
-    `<p class="rating"> ${place.rating} </p>`+
-    `<div class="star-ratings-css">
-    <div class="star-ratings-css-top" style="width: ${percent}%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-    <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-    </div>` +
-    '</div>'+
-    '</div>';
+      let contentString;
+      if (!place.rating) {
+        contentString = '<div id="content">'+
+      `<h1 id="firstHeading" class="firstHeading">${place.name}</h1>`+
+      '<div id="bodyContent">'+
+      '</div>'+
+      '</div>';
+      } else {
+          let percent = (place.rating / 5 * 100);
+          contentString = '<div id="content">'+
+        `<h1 id="firstHeading" class="firstHeading">${place.name}</h1>`+
+        '<div id="bodyContent">'+
+        `<p class="rating"> ${place.rating} </p>`+
+        `<div class="star-ratings-css">
+        <div class="star-ratings-css-top" style="width: ${percent}%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>` +
+        '</div>'+
+        '</div>';
+      }
 
 
       marker.addListener('mouseover', function() {

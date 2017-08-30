@@ -47,7 +47,7 @@ class List extends React.Component {
       return <div></div>;
     }
     if (this.props.places.length === 0 && !this.props.loading){
-      return <div>No results found</div>;
+      return <div className={"noResults"}>No results found</div>;
     } else {
       return (
         <ul>
