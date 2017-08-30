@@ -10520,8 +10520,13 @@ var List = function (_React$Component) {
   }, {
     key: 'createLabel',
     value: function createLabel(place) {
+      var contentString = void 0;
       var percent = place.rating / 5 * 100;
-      var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating) + '<p>' + ('<div class="star-ratings-css">\n    <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    </div>') + '</div>' + '</div>';
+      if (!place.rating) {
+        contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '</div>';
+      } else {
+        contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating) + '<p>' + ('<div class="star-ratings-css">\n      <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n      <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n      </div>') + '</div>' + '</div>';
+      }
 
       if (!this.infowindow) {
         this.infowindow = new google.maps.InfoWindow({
@@ -10551,8 +10556,15 @@ var List = function (_React$Component) {
           'ul',
           null,
           this.props.places.map(function (place, id) {
-            var open = place.opening_hours ? place.opening_hours.open_now : "";
-            open = open ? "Open Now" : "Closed";
+            var open = void 0;
+            if (place.opening_hours) {
+              open = place.opening_hours.open_now;
+            } else {
+              open = null;
+            }
+            if (open !== null) {
+              open = open ? "Open Now" : "Closed";
+            }
             return _react2.default.createElement(
               'li',
               { key: id,
@@ -10568,11 +10580,7 @@ var List = function (_React$Component) {
                 null,
                 _this2.editAddress(place.formatted_address)
               ),
-              _react2.default.createElement(
-                'p',
-                null,
-                '' + open
-              )
+              _this2.storeHours(open)
             );
           })
         );
@@ -10608,6 +10616,19 @@ var List = function (_React$Component) {
         that.infowindow.close();
         that.infowindow = null;
       };
+    }
+  }, {
+    key: 'storeHours',
+    value: function storeHours(open) {
+      if (open) {
+        return _react2.default.createElement(
+          'p',
+          null,
+          '' + open
+        );
+      } else {
+        return;
+      }
     }
   }, {
     key: 'render',
