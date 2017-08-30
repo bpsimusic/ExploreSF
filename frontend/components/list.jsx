@@ -11,39 +11,36 @@ class List extends React.Component {
     let that = this;
     return (e)=>{
       e.preventDefault();
-      createLabel(place);
-
-      function createLabel(x){
-
-        let percent = (x.rating / 5 * 100);
-
-        let contentString = '<div id="content">'+
-      `<h1 id="firstHeading" class="firstHeading">${x.name}</h1>`+
-      '<div id="bodyContent">'+
-      `<p class="rating"> ${x.rating}`+ '<p>'+
-      `<div class="star-ratings-css">
-  <div class="star-ratings-css-top" style="width: ${percent}%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-  <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-</div>` +
-      '</div>'+
-      '</div>';
-
-
-       if(!that.infowindow){
-         that.infowindow = new google.maps.InfoWindow({
-             content: contentString,
-             position: x.geometry.location,
-             disableAutoPan: true,
-         });
-       }
-       that.infowindow.open(window.map);
-      }
+      that.createLabel(place);
     };
+  }
+
+  createLabel(place){
+    let percent = (place.rating / 5 * 100);
+    let contentString = '<div id="content">'+
+    `<h1 id="firstHeading" class="firstHeading">${place.name}</h1>`+
+    '<div id="bodyContent">'+
+    `<p class="rating"> ${place.rating}`+ '<p>'+
+    `<div class="star-ratings-css">
+    <div class="star-ratings-css-top" style="width: ${percent}%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+    <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+    </div>` +
+    '</div>'+
+    '</div>';
+
+     if(!this.infowindow){
+       this.infowindow = new google.maps.InfoWindow({
+           content: contentString,
+           position: place.geometry.location,
+           disableAutoPan: true,
+       });
+     }
+     this.infowindow.open(window.map);
   }
 
   displayList(){
     if(this.props.loading){
-      return <div></div>;
+      return ;
     }
     if (this.props.places.length === 0 && !this.props.loading){
       return <div className={"noResults"}>No results found</div>;
@@ -66,7 +63,6 @@ class List extends React.Component {
         </ul>
       );
     }
-
   }
 
   editAddress(address){
@@ -78,25 +74,22 @@ class List extends React.Component {
     if (this.props.loading){
       return (
         <div className={"spinner"}>
-      <ClipLoader
-          color={'#123abc'}
-          loading={true}
-          size={80}
-        />
-      </div>
+          <ClipLoader
+              color={'#123abc'}
+              loading={true}
+              size={80}
+            />
+        </div>
       );
     }
   }
 
-
   removeTarget(place){
     let that = this;
     return (e)=>{
-
       e.preventDefault();
       that.infowindow.close();
       that.infowindow = null;
-
     };
   }
 

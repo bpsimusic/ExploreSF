@@ -10514,24 +10514,23 @@ var List = function (_React$Component) {
       var that = this;
       return function (e) {
         e.preventDefault();
-        createLabel(place);
-
-        function createLabel(x) {
-
-          var percent = x.rating / 5 * 100;
-
-          var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + x.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + x.rating) + '<p>' + ('<div class="star-ratings-css">\n  <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n  <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n</div>') + '</div>' + '</div>';
-
-          if (!that.infowindow) {
-            that.infowindow = new google.maps.InfoWindow({
-              content: contentString,
-              position: x.geometry.location,
-              disableAutoPan: true
-            });
-          }
-          that.infowindow.open(window.map);
-        }
+        that.createLabel(place);
       };
+    }
+  }, {
+    key: 'createLabel',
+    value: function createLabel(place) {
+      var percent = place.rating / 5 * 100;
+      var contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating) + '<p>' + ('<div class="star-ratings-css">\n    <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n    </div>') + '</div>' + '</div>';
+
+      if (!this.infowindow) {
+        this.infowindow = new google.maps.InfoWindow({
+          content: contentString,
+          position: place.geometry.location,
+          disableAutoPan: true
+        });
+      }
+      this.infowindow.open(window.map);
     }
   }, {
     key: 'displayList',
@@ -10539,7 +10538,7 @@ var List = function (_React$Component) {
       var _this2 = this;
 
       if (this.props.loading) {
-        return _react2.default.createElement('div', null);
+        return;
       }
       if (this.props.places.length === 0 && !this.props.loading) {
         return _react2.default.createElement(
@@ -10605,7 +10604,6 @@ var List = function (_React$Component) {
     value: function removeTarget(place) {
       var that = this;
       return function (e) {
-
         e.preventDefault();
         that.infowindow.close();
         that.infowindow = null;
@@ -10719,6 +10717,8 @@ var SearchBar = function (_React$Component) {
     _this.state = { value: 'restaurant', places: [], loading: true };
     _this.handleInput = _this.handleInput.bind(_this);
     _this.handleSubmit = _this.handleSubmit.bind(_this);
+    _this.retrievePlaces = _this.retrievePlaces.bind(_this);
+    _this.infowindow = new google.maps.InfoWindow({ disableAutoPan: true });
     return _this;
   }
 
@@ -10726,6 +10726,45 @@ var SearchBar = function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.query(this.state.value);
+    }
+  }, {
+    key: 'createMarker',
+    value: function createMarker(place) {
+      var _this2 = this;
+
+      if (!place) {
+        return;
+      }
+      var symbolOne = {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 10,
+        strokeColor: '#e60000',
+        strokeWeight: 7,
+        fillColor: 'white',
+        fillOpacity: 1
+      };
+
+      var marker = new google.maps.Marker({
+        icon: symbolOne,
+        map: window.map,
+        position: place.geometry.location
+      });
+      var contentString = void 0;
+      if (!place.rating) {
+        contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + '</div>' + '</div>';
+      } else {
+        var percent = place.rating / 5 * 100;
+        contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating + ' </p>') + ('<div class="star-ratings-css">\n      <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n      <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n      </div>') + '</div>' + '</div>';
+      }
+      marker.addListener('mouseover', function () {
+        _this2.infowindow.setContent(contentString);
+        _this2.infowindow.open(window.map, marker);
+      });
+
+      marker.addListener('mouseout', function () {
+        _this2.infowindow.close();
+      });
+      return marker;
     }
   }, {
     key: 'handleInput',
@@ -10736,92 +10775,54 @@ var SearchBar = function (_React$Component) {
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       e.preventDefault();
       this.setState({ loading: true }, function () {
-        _this2.query(_this2.state.value);
+        _this3.query(_this3.state.value);
       });
+    }
+  }, {
+    key: 'retrievePlaces',
+    value: function retrievePlaces(results, status) {
+      var _this4 = this;
+
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        var length = 10;
+        if (results.length < length) {
+          length = results.length;
+        }
+        this.setState({ places: results.slice(0, 10), loading: false }, function () {
+          var markers = [];
+          for (var i = 0; i < length; i++) {
+            markers.push(_this4.createMarker(results[i]));
+          }
+
+          var bounds = new google.maps.LatLngBounds();
+          for (var j = 0; j < markers.length; j++) {
+            bounds.extend(markers[j].getPosition());
+          }
+          window.map.fitBounds(bounds);
+        });
+      } else {
+        this.setState({ places: [], loading: false });
+      }
     }
   }, {
     key: 'query',
     value: function query(entry) {
-      var infowindow = void 0;
       var location = { lat: 37.773972, lng: -122.431297 };
-
       window.map = new google.maps.Map(document.getElementById('map'), {
         center: location,
         zoom: 13
       });
 
-      infowindow = new google.maps.InfoWindow({ disableAutoPan: true });
       var service = new google.maps.places.PlacesService(window.map);
       service.textSearch({
         location: location,
         radius: '500',
         query: entry
-      }, callback.bind(this));
-
-      function callback(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          var length = 10;
-          if (results.length < length) {
-            length = results.length;
-          }
-          this.setState({ places: results.slice(0, 10), loading: false }, function () {
-            var markers = [];
-            for (var i = 0; i < length; i++) {
-              markers.push(createMarker(results[i]));
-            }
-
-            var bounds = new google.maps.LatLngBounds();
-            for (var j = 0; j < markers.length; j++) {
-              bounds.extend(markers[j].getPosition());
-            }
-
-            window.map.fitBounds(bounds);
-          });
-        } else {
-          this.setState({ places: [], loading: false });
-        }
-      }
-
-      function createMarker(place) {
-        if (!place) {
-          return;
-        }
-        var symbolOne = {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 10,
-          strokeColor: '#e60000',
-          strokeWeight: 7,
-          fillColor: 'white',
-          fillOpacity: 1
-        };
-
-        var marker = new google.maps.Marker({
-          icon: symbolOne,
-          map: window.map,
-          position: place.geometry.location
-        });
-        var contentString = void 0;
-        if (!place.rating) {
-          contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + '</div>' + '</div>';
-        } else {
-          var percent = place.rating / 5 * 100;
-          contentString = '<div id="content">' + ('<h1 id="firstHeading" class="firstHeading">' + place.name + '</h1>') + '<div id="bodyContent">' + ('<p class="rating"> ' + place.rating + ' </p>') + ('<div class="star-ratings-css">\n        <div class="star-ratings-css-top" style="width: ' + percent + '%"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n        <div class="star-ratings-css-bottom"><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span><span>\u2605</span></div>\n        </div>') + '</div>' + '</div>';
-        }
-
-        marker.addListener('mouseover', function () {
-          infowindow.setContent(contentString);
-          infowindow.open(window.map, marker);
-        });
-
-        marker.addListener('mouseout', function () {
-          infowindow.close();
-        });
-        return marker;
-      }
+      }, this.retrievePlaces);
     }
   }, {
     key: 'render',
