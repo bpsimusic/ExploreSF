@@ -12,10 +12,11 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
-    "react": "^15.3.0",
-    "react-dom": "^15.3.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.5.0",
     "react-redux": "^5.0.6",
     "react-spinners": "0.0.30",
+    "react-test-renderer": "^15.6.1",
     "redux": "^3.7.2"
   },
   "devDependencies": {
@@ -25,7 +26,7 @@
     "babel-polyfill": "^6.13.0",
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
-    "enzyme": "^2.5.1",
+    "enzyme": "^2.9.1",
     "jest": "^15.1.1",
     "jest-cli": "^20.0.4",
     "jest-environment-node-debug": "^2.0.0",
@@ -38,6 +39,16 @@
     "moduleFileExtensions": [
       "js",
       "jsx"
-    ]
+    ],
+    "globals":{
+    "google": {
+      "maps": {}
+    }
+  }
+  },
+  "enzyme": {
+    "globals": {
+      "google": {}
+    }
   }
 }
