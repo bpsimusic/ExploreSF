@@ -32,7 +32,7 @@ describe('searchBar', ()=>{
     expect(wrapper.find("form").length).toBe(1);
   });
 
-  describe('form functionality', ()=>{
+  describe(`searchBar's form functions correctly`, ()=>{
     let instance;
     beforeEach(() => {
       google.maps.places.PlacesService.prototype.textSearch = jest.fn();
@@ -40,23 +40,30 @@ describe('searchBar', ()=>{
       instance = wrapper.instance();
     });
 
-    it("should submit the form when submit is clicked", ()=>{
-      instance.handleSubmit = jest.fn();
-      wrapper.update();
-      wrapper.find("form").simulate("submit");
-      expect(instance.handleSubmit).toBeCalled();
-    });
-
-    it("should call onChange method when typing in input", ()=>{
+    it("should call handleInput when typing in input", ()=>{
       instance.handleInput = jest.fn();
       wrapper.update();
       wrapper.find("input").simulate("change");
       expect(instance.handleInput).toBeCalled();
     });
 
-    it("setState should change input's value when typing", ()=>{
+    it("handleInput should call setState with event", ()=>{
+      const event = {preventDefault: function(){}, target: {value: 5}};
+      instance.setState = jest.fn();
+      instance.handleInput(event);
+      expect(instance.setState).toBeCalledWith({value: event.target.value});
+    });
+
+    it("setState should change input's value", ()=>{
       wrapper.setState({value: 'dinner'});
       expect(wrapper.find("input").get(0).value).toBe('dinner');
+    });
+
+    it("should submit the form when submit is clicked", ()=>{
+      instance.handleSubmit = jest.fn();
+      wrapper.update();
+      wrapper.find("form").simulate("submit");
+      expect(instance.handleSubmit).toBeCalled();
     });
   });
 });
