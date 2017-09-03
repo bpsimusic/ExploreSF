@@ -10,6 +10,7 @@ class SearchBar extends React.Component {
     this.handleInput = this.handleInput.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.retrievePlaces = this.retrievePlaces.bind(this);
+    this.setBoundsAndMarkers = this.setBoundsAndMarkers.bind(this);
     this.infowindow = new google.maps.InfoWindow({disableAutoPan: true});
   }
 
@@ -62,6 +63,7 @@ class SearchBar extends React.Component {
 
     marker.addListener('mouseout', ()=>{
       this.infowindow.close();
+
     });
     return marker;
   }
@@ -78,23 +80,8 @@ class SearchBar extends React.Component {
 
   retrievePlaces(results, status){
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-      let length = 10;
-      if (results.length < length){
-        length = results.length;
-      }
-      this.setState({places: results.slice(0,10), loading: false}, ()=>{
-        let markers = [];
-        for (let i = 0; i < length; i++) {
-          markers.push(this.createMarker(results[i]));
-        }
-
-        let bounds = new google.maps.LatLngBounds();
-        for (let j = 0; j < markers.length; j++) {
-         bounds.extend(markers[j].getPosition());
-        }
-        window.map.fitBounds(bounds);
-      });
-
+      this.setState({places: results.slice(0,10), loading: false},
+      this.setBoundsAndMarkers(results));
     } else {
       this.setState({places: [], loading: false});
     }
@@ -112,6 +99,22 @@ class SearchBar extends React.Component {
       radius: '500',
       query: entry
     }, this.retrievePlaces);
+  }
+
+  setBoundsAndMarkers(results){
+    let markers = [];
+    let length = 10;
+    if (results.length < length){
+      length = results.length;
+    }
+    for (let i = 0; i < length; i++) {
+      markers.push(this.createMarker(results[i]));
+    }
+    let bounds = new google.maps.LatLngBounds();
+    for (let j = 0; j < markers.length; j++) {
+     bounds.extend(markers[j].getPosition());
+    }
+    window.map.fitBounds(bounds);
   }
 
   render(){

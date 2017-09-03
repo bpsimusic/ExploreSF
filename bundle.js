@@ -10684,6 +10684,7 @@ var SearchBar = function (_React$Component) {
     _this.handleInput = _this.handleInput.bind(_this);
     _this.handleSubmit = _this.handleSubmit.bind(_this);
     _this.retrievePlaces = _this.retrievePlaces.bind(_this);
+    _this.setBoundsAndMarkers = _this.setBoundsAndMarkers.bind(_this);
     _this.infowindow = new google.maps.InfoWindow({ disableAutoPan: true });
     return _this;
   }
@@ -10751,25 +10752,8 @@ var SearchBar = function (_React$Component) {
   }, {
     key: 'retrievePlaces',
     value: function retrievePlaces(results, status) {
-      var _this4 = this;
-
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        var length = 10;
-        if (results.length < length) {
-          length = results.length;
-        }
-        this.setState({ places: results.slice(0, 10), loading: false }, function () {
-          var markers = [];
-          for (var i = 0; i < length; i++) {
-            markers.push(_this4.createMarker(results[i]));
-          }
-
-          var bounds = new google.maps.LatLngBounds();
-          for (var j = 0; j < markers.length; j++) {
-            bounds.extend(markers[j].getPosition());
-          }
-          window.map.fitBounds(bounds);
-        });
+        this.setState({ places: results.slice(0, 10), loading: false }, this.setBoundsAndMarkers(results));
       } else {
         this.setState({ places: [], loading: false });
       }
@@ -10788,6 +10772,23 @@ var SearchBar = function (_React$Component) {
         radius: '500',
         query: entry
       }, this.retrievePlaces);
+    }
+  }, {
+    key: 'setBoundsAndMarkers',
+    value: function setBoundsAndMarkers(results) {
+      var markers = [];
+      var length = 10;
+      if (results.length < length) {
+        length = results.length;
+      }
+      for (var i = 0; i < length; i++) {
+        markers.push(this.createMarker(results[i]));
+      }
+      var bounds = new google.maps.LatLngBounds();
+      for (var j = 0; j < markers.length; j++) {
+        bounds.extend(markers[j].getPosition());
+      }
+      window.map.fitBounds(bounds);
     }
   }, {
     key: 'render',

@@ -1,3 +1,5 @@
+/*global jest*/
+
 describe('entry file', ()=>{
   beforeEach(()=>{
       document.addEventListener = jest.fn();

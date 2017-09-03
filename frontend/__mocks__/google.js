@@ -1,3 +1,5 @@
+/*global jest*/
+
 const google = jest.genMockFromModule('../google');
 
 function InfoWindow(x){
@@ -9,13 +11,17 @@ function Marker(x){
 function LatLngBounds(x){
   this.x = x;
 }
+
+LatLngBounds.prototype.extend = function(){};
 function Map(x){
   this.x = x;
 }
 
+Map.prototype.fitBounds = function(){};
+
 const places = {
   PlacesService,
-  PlacesServiceStatus: {OK: true}
+  PlacesServiceStatus: {OK: "OK"}
 };
 
 function PlacesService(x){

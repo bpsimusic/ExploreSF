@@ -17,8 +17,7 @@
     "react-redux": "^5.0.6",
     "react-spinners": "0.0.30",
     "react-test-renderer": "^15.6.1",
-    "redux": "^3.7.2",
-    "sinon": "^3.2.1"
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "babel-core": "6.10.4",
