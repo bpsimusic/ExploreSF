@@ -8,6 +8,7 @@ function InfoWindow(x){
 function Marker(x){
   this.x = x;
 }
+
 function LatLngBounds(x){
   this.x = x;
 }

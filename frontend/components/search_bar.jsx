@@ -63,7 +63,6 @@ class SearchBar extends React.Component {
 
     marker.addListener('mouseout', ()=>{
       this.infowindow.close();
-
     });
     return marker;
   }

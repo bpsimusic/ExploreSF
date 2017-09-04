@@ -128,5 +128,87 @@ describe('searchBar Component', ()=>{
         expect(instance.state.places).toEqual(results);
       });
     });
+
+    describe('method createMarker', ()=>{
+      let place;
+      let map;
+      beforeEach(()=>{
+        map = {};
+        place = {getPosition: function(){}, rating: 5, geometry: {location: ''}};
+        instance.infowindow.setContent = jest.fn();
+        instance.infowindow.open = jest.fn();
+        instance.infowindow.close = jest.fn();
+        google.maps.Marker = jest.fn();
+        google.maps.Marker.prototype.addListener = jest.fn((event, cb) => {
+          map[event] = cb;
+        });
+      });
+      it("should stop if place is undefined", ()=>{
+        let dummyPlace;
+        instance.createMarker(dummyPlace);
+        expect(instance.createMarker()).toEqual(undefined);
+      });
+
+      it("should invoke google.maps.Marker constructor", ()=>{
+        instance.createMarker(place);
+        expect(google.maps.Marker).toBeCalled();
+      });
+
+      it("adds a mouseover listener to the marker", ()=>{
+        let marker = instance.createMarker(place);
+        map['mouseover']();
+        expect(instance.infowindow.setContent).toBeCalled();
+        expect(instance.infowindow.open).toBeCalled();
+      });
+
+      it("adds a mouseout listener to the marker", ()=>{
+        let marker = instance.createMarker(place);
+        map['mouseout']();
+        expect(instance.infowindow.close).toBeCalled();
+      });
+    });
+
+    describe("method setBoundsAndMarkers", ()=>{
+      let results;
+      beforeEach(()=>{
+        results = [1,2,3,4,5,6,7,8,9,10];
+        wrapper = shallow(<SearchBar />);
+        google.maps.LatLngBounds = jest.fn();
+        google.maps.LatLngBounds.prototype.extend = jest.fn();
+        instance = wrapper.instance();
+        instance.createMarker = jest.fn((object)=>{
+          return {getPosition: function(){}};
+        });
+        wrapper.update();
+      });
+
+
+      it("should call LatLngBounds constructor", ()=>{
+        instance.setBoundsAndMarkers(results);
+        expect(google.maps.LatLngBounds).toBeCalled();
+      });
+
+      it("should call the map's fitBounds method", ()=>{
+        window.map.fitBounds = jest.fn();
+        instance.setBoundsAndMarkers(results);
+        expect(window.map.fitBounds).toBeCalled();
+      });
+
+      it("length of markers array should be 10 by default", ()=>{
+        instance.setBoundsAndMarkers(results);
+        expect(instance.createMarker).toHaveBeenCalledTimes(10);
+      });
+
+      it("if results length is less than 10, set markers length to be results length", ()=>{
+        results = [1,2,3];
+        instance.setBoundsAndMarkers(results);
+        expect(instance.createMarker).toHaveBeenCalledTimes(3);
+      });
+    });
+
+    // describe("componentDidMount", ()=>{
+    //   mount!
+    // })
+
   });
 });
