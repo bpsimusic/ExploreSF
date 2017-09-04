@@ -8,10 +8,9 @@ class List extends React.Component {
   }
 
   addTarget(place){
-    let that = this;
     return (e)=>{
       e.preventDefault();
-      that.createLabel(place);
+      this.createLabel(place);
     };
   }
 
@@ -97,11 +96,10 @@ class List extends React.Component {
 
 
   removeTarget(place){
-    let that = this;
     return (e)=>{
       e.preventDefault();
-      that.infowindow.close();
-      that.infowindow = null;
+      this.infowindow.close();
+      this.infowindow = null;
     };
   }
 

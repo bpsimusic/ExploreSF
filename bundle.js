@@ -10511,10 +10511,11 @@ var List = function (_React$Component) {
   _createClass(List, [{
     key: 'addTarget',
     value: function addTarget(place) {
-      var that = this;
+      var _this2 = this;
+
       return function (e) {
         e.preventDefault();
-        that.createLabel(place);
+        _this2.createLabel(place);
       };
     }
   }, {
@@ -10540,7 +10541,7 @@ var List = function (_React$Component) {
   }, {
     key: 'displayList',
     value: function displayList() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.props.loading) {
         return;
@@ -10564,8 +10565,8 @@ var List = function (_React$Component) {
             return _react2.default.createElement(
               'li',
               { key: id,
-                onMouseEnter: _this2.addTarget(place),
-                onMouseLeave: _this2.removeTarget(place) },
+                onMouseEnter: _this3.addTarget(place),
+                onMouseLeave: _this3.removeTarget(place) },
               _react2.default.createElement(
                 'p',
                 { className: "locationName" },
@@ -10574,9 +10575,9 @@ var List = function (_React$Component) {
               _react2.default.createElement(
                 'p',
                 null,
-                _this2.editAddress(place.formatted_address)
+                _this3.editAddress(place.formatted_address)
               ),
-              _this2.storeHours(open)
+              _this3.storeHours(open)
             );
           })
         );
@@ -10606,11 +10607,12 @@ var List = function (_React$Component) {
   }, {
     key: 'removeTarget',
     value: function removeTarget(place) {
-      var that = this;
+      var _this4 = this;
+
       return function (e) {
         e.preventDefault();
-        that.infowindow.close();
-        that.infowindow = null;
+        _this4.infowindow.close();
+        _this4.infowindow = null;
       };
     }
   }, {

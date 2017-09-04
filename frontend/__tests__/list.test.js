@@ -21,7 +21,7 @@ describe('searchBar Component', ()=>{
     google.maps.Map = require('google').maps.Map;
     google.maps.places = require('google').maps.places;
     google.maps.SymbolPath = require('google').maps.SymbolPath;
-    places = [{opening_hours: {open_now: true}, formatted_address: '', name: ''}]
+    places = [{opening_hours: {open_now: true}, formatted_address: 'Chipotle', name: 'Chipotle'}]
   });
 
   describe("list's html elements", ()=>{
@@ -45,4 +45,35 @@ describe('searchBar Component', ()=>{
     });
   });
 
+  describe("list item", ()=>{
+    let event;
+    beforeEach(()=>{
+      loading = false;
+      wrapper = shallow(<List places={places} loading={loading}/>);
+      event = {preventDefault: function(){}, target: {value: 5}};
+      instance = wrapper.instance();
+    });
+
+    it("attaches a mouseenter listener to a list item",()=>{
+      instance.createLabel = jest.fn();
+      wrapper.update();
+      wrapper.find("li").simulate('mouseEnter', event);
+      expect(instance.createLabel).toHaveBeenCalledTimes(1);
+    });
+
+    it("attaches a mouseout listener to a list item",()=>{
+      google.maps.InfoWindow.prototype.close = jest.fn();
+      instance.infowindow = new google.maps.InfoWindow();
+      wrapper.find("li").simulate('mouseLeave', event);
+      expect(google.maps.InfoWindow.prototype.close).toHaveBeenCalledTimes(1);
+    });
+
+    it("displays a name and an address", ()=>{
+      loading = false;
+      places = [{opening_hours: {open_now: true}, formatted_address: '123 Main St.', name: 'Chipotle'}];
+      wrapper = shallow(<List places={places} loading={loading}/>);
+      wrapper.contains(<p className={"locationName"}>"Chipotle"</p> );
+      wrapper.contains(<p>'123 Main St.'</p> );
+    });
+  });
 });
