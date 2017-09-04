@@ -10,6 +10,8 @@ jest.mock('google');
 
 describe('searchBar Component', ()=>{
   let wrapper;
+  let instance;
+
   beforeEach(() => {
     google.maps.InfoWindow = require('google').maps.InfoWindow;
     google.maps.Marker = require('google').maps.Marker;
@@ -17,23 +19,35 @@ describe('searchBar Component', ()=>{
     google.maps.Map = require('google').maps.Map;
     google.maps.places = require('google').maps.places;
     google.maps.SymbolPath = require('google').maps.SymbolPath;
-    wrapper = shallow(<SearchBar />);
   });
 
-  it("should render an input field", ()=>{
-    expect(wrapper.find("input").length).toBe(1);
+  describe("componentDidMount", ()=>{
+    it('calls componentDidMount', () => {
+      SearchBar.prototype.componentDidMount = jest.fn();
+      wrapper = mount(<SearchBar />);
+      expect(SearchBar.prototype.componentDidMount).toHaveBeenCalledTimes(1);
+    });
   });
 
-  it("should render a button", ()=>{
-    expect(wrapper.find("button").length).toBe(1);
-  });
+  describe(`searchBar's html elements`, ()=>{
+    beforeEach(()=>{
+      wrapper = shallow(<SearchBar />);
+    });
 
-  it("should render a form", ()=>{
-    expect(wrapper.find("form").length).toBe(1);
+    it("should render an input field", ()=>{
+      expect(wrapper.find("input").length).toBe(1);
+    });
+
+    it("should render a button", ()=>{
+      expect(wrapper.find("button").length).toBe(1);
+    });
+
+    it("should render a form", ()=>{
+      expect(wrapper.find("form").length).toBe(1);
+    });
   });
 
   describe(`searchBar's form functions correctly`, ()=>{
-    let instance;
     let event;
     beforeEach(() => {
       google.maps.places.PlacesService.prototype.textSearch = jest.fn();
@@ -69,7 +83,6 @@ describe('searchBar Component', ()=>{
 
     it('query method is invoked when form is submitted', ()=>{
       instance.query = jest.fn();
-      wrapper.update();
       wrapper.setState({value: 'gym'});
       instance.handleSubmit(event);
       expect(instance.query).toBeCalledWith('gym');
@@ -77,7 +90,6 @@ describe('searchBar Component', ()=>{
   });
 
   describe('google maps API', ()=>{
-    let instance;
     let entry = "gym";
     let textSearch;
     let obj= {
@@ -92,13 +104,11 @@ describe('searchBar Component', ()=>{
       google.maps.places.PlacesService.prototype.textSearch =
       jest.fn((object, callback)=>callback());
       textSearch = google.maps.places.PlacesService.prototype.textSearch;
-      wrapper.update();
     });
 
     describe('method query', ()=>{
       beforeEach(()=>{
         instance.retrievePlaces = jest.fn();
-        wrapper.update();
         instance.query(entry);
       });
       it('query calls method textSearch with correct arguments', ()=>{
@@ -122,7 +132,6 @@ describe('searchBar Component', ()=>{
 
       it("should set state.places to results if status succeeds", ()=>{
         instance.createMarker = jest.fn(()=>({getPosition: function(){}}));
-        wrapper.update();
         wrapper.setState({places: "dummy"});
         instance.retrievePlaces(results, success);
         expect(instance.state.places).toEqual(results);
@@ -179,7 +188,6 @@ describe('searchBar Component', ()=>{
         instance.createMarker = jest.fn((object)=>{
           return {getPosition: function(){}};
         });
-        wrapper.update();
       });
 
 
@@ -205,10 +213,5 @@ describe('searchBar Component', ()=>{
         expect(instance.createMarker).toHaveBeenCalledTimes(3);
       });
     });
-
-    // describe("componentDidMount", ()=>{
-    //   mount!
-    // })
-
   });
 });
