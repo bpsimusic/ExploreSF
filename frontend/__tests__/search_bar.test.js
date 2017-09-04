@@ -5,6 +5,7 @@
 import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 import SearchBar from '../components/search_bar';
+import List from '../components/list';
 
 jest.mock('google');
 
@@ -211,6 +212,14 @@ describe('searchBar Component', ()=>{
         results = [1,2,3];
         instance.setBoundsAndMarkers(results);
         expect(instance.createMarker).toHaveBeenCalledTimes(3);
+      });
+    });
+
+    describe("passes props to List Component", ()=>{
+      it("passes places to List", ()=>{
+        wrapper = mount(<SearchBar />);
+        expect(wrapper.find(List).props().places).toBeInstanceOf(Array);
+        expect(wrapper.find(List).props()).toHaveProperty("loading");
       });
     });
   });
