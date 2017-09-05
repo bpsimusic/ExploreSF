@@ -6,7 +6,7 @@ import React from 'react';
 import { shallow, mount, render } from 'enzyme';
 import SearchBar from '../components/search_bar';
 import List from '../components/list';
-
+import GoogleMaps from './google_maps_api';
 jest.mock('google');
 
 describe('searchBar Component', ()=>{
