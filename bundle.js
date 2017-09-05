@@ -10763,6 +10763,14 @@ var SearchBar = function (_React$Component) {
   }, {
     key: 'query',
     value: function query(entry) {
+      if (entry.length === 0) {
+        window.map = new google.maps.Map(document.getElementById('map'), {
+          center: location,
+          zoom: 13
+        });
+        this.setState({ places: [], loading: false });
+        return;
+      }
       var location = { lat: 37.773972, lng: -122.431297 };
       window.map = new google.maps.Map(document.getElementById('map'), {
         center: location,

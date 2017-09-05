@@ -21,7 +21,7 @@ describe('searchBar Component', ()=>{
     google.maps.Map = require('google').maps.Map;
     google.maps.places = require('google').maps.places;
     google.maps.SymbolPath = require('google').maps.SymbolPath;
-    places = [{opening_hours: {open_now: true}, formatted_address: 'Chipotle', name: 'Chipotle'}]
+    places = [{opening_hours: {open_now: true}, formatted_address: '123 Main St.', name: 'Chipotle'}]
   });
 
   describe("list's html elements", ()=>{
