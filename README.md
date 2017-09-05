@@ -1,16 +1,33 @@
 # Explore SF
 
 [Explore SF live](https://bpsimusic.github.io/ExploreSF/)
-[live](https://bpsimusic.github.io/ExploreSF/)
 
 Users can use this app to search for places in San Francisco.
 I used the Google Maps API to return a list of locations
 most closely matching the searched words.
 
 Simply type in any word related to what you're looking for, and a list of places
-will appear, as well as a map.
+will appear on the map.
 
 ![demo of project](/docs/demo.png)
+
+##Design Choices
+
+I wanted to create something convenient for indecisive end-users, so in my app
+I included business hours and its rating. I decided
+to use the hover event for a quick scan of location and quality. If the user wants to know more about a place,
+I will use the click event to provide the place's phone number and location in the future.
+
+```javascript
+//Each list item
+  <li key={id}
+    onMouseEnter={this.addTarget(place)}
+    onMouseLeave={this.removeTarget(place)}>
+    <p className={"locationName"}>{place.name}</p>
+    <p>{this.editAddress(place.formatted_address)}</p>
+    {this.storeHours(open)}
+  </li>
+```
 
 ## Google Maps API
 
@@ -43,8 +60,8 @@ let marker = new google.maps.Marker({
 I had never tested an API before, so I was excited to try something new. I used Jest and Enzyme
 to test my List Component and SearchBar component.
 
-To mock an external API, I had to create a folder "__mocks__", create a file (google.js), and call jest.genMockFromModule. The file (google.js) serves as my fake module, and anytime I used
-the Google API in my React Components, I had to create mock implementations.  
+To mock an external API, I had to create a folder "__mocks__", create a file (google.js), and call jest.genMockFromModule. The file (google.js) served as my fake module, and anytime I used
+the Google API in my React Components, I had to use my mock implementations in my tests.  
 
 ```javascript
 //search_bar.jsx
