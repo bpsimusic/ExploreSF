@@ -11,7 +11,7 @@ will appear on the map.
 
 ![demo of project](/docs/demo.png)
 
-##Design Choices
+## Design Choices
 
 I wanted to create something convenient for indecisive end-users, so in my app
 I included business hours and its rating. I decided
